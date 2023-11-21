@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package Handin5;
+
+option go_package = "protoFile/proto";
+
+message BidRequest {
+  int32 amount = 1;
+  string bidder_id = 2;
+}
+
+message BidResponse {
+  enum BidResult {
+    BID_FAIL = 0;
+    BID_SUCCESS = 1;
+    BID_EXCEPTION = 2;
+  }
+
+  BidResult result = 1;
+}
+
+message ResultRequest {
+}
+
+message ResultResponse {
+  enum Outcome {
+    AUCTION_NOT_OVER = 0;
+    AUCTION_SUCCESS = 1;
+    AUCTION_FAIL = 2;
+  }
+
+  Outcome outcome = 1;
+  int32 highest_bid = 2;
+  string highest_bidder = 3;
+}
