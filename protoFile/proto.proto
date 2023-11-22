@@ -4,6 +4,12 @@ package Handin5;
 
 option go_package = "protoFile/proto";
 
+service Auction {
+  rpc Bid(BidRequest) returns (BidResponse);
+
+  rpc Result(ResultRequest) returns (ResultResponse);
+}
+
 message BidRequest {
   int32 amount = 1;
   string bidder_id = 2;
@@ -20,6 +26,7 @@ message BidResponse {
 }
 
 message ResultRequest {
+  string bidder_id = 1;
 }
 
 message ResultResponse {

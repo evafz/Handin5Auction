@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"sync"
+
+	proto "Replication/protoFile"
 )
 
 type AuctionNode struct {
@@ -12,7 +14,6 @@ type AuctionNode struct {
 	bidders       map[string]int
 	mu            sync.Mutex
 }
-
 
 func (n *AuctionNode) Bid(request *BidRequest) *BidResponse {
 	n.mu.Lock()
