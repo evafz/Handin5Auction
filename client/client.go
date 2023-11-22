@@ -5,14 +5,25 @@ import (
 	"sync"
 
 	proto "Replication/protoFile"
+
+	"google.golang.org/grpc"
 )
 
 type AuctionNode struct {
 	id            int
 	highestBid    int
 	highestBidder string
-	bidders       map[string]int
+	bidders       map[string]int64
 	mu            sync.Mutex
+}
+
+type BidRequest struct {
+	bidderID string
+	amount int64
+}
+
+type BidResponse struct {
+	bidResult enums
 }
 
 func (n *AuctionNode) Bid(request *BidRequest) *BidResponse {
@@ -20,17 +31,17 @@ func (n *AuctionNode) Bid(request *BidRequest) *BidResponse {
 	defer n.mu.Unlock()
 
 	// Check if the bidder is registered
-	if _, exists := n.bidders[bidderID]; !exists {
-		n.bidders[bidderID] = 0
+	if _, exists := n.bidders[request.bidderID]; !exists {
+		n.bidders[request.bidderID] = 0
 	}
 
 	// Check if the bid is higher than the previous one
-	if amount <= n.bidders[bidderID] {
+	if request.amount <= n.bidders[request.bidderID] {
 		return BidFail
 	}
 
 	// Update the bid
-	n.bidders[bidderID] = amount
+	n.bidders[request.bidderID] = request.amount
 
 	return BidSuccess
 }
