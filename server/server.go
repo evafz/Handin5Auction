@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"strconv"
@@ -15,17 +14,17 @@ import (
 type Server struct {
 	proto.UnimplementedAuctionServer
 
-	name       string
-	port       int
-	lamport    int64
+	name        string
+	port        int
+	lamport     int64
 	auctionNode AuctionNode
-	clientLock sync.RWMutex
+	clientLock  sync.RWMutex
 }
 
 func NewServer(name string, port int) *Server {
 	return &Server{
-		name:    name,
-		port:    port,
+		name: name,
+		port: port,
 	}
 }
 
@@ -45,6 +44,6 @@ func startServer(server *Server) {
 }
 
 func main() {
-	server := NewServer("ChittyChatServer", 8080) // Change port if needed
+	server := NewServer("AuctionServer", 8080) // Change port if needed
 	startServer(server)
 }
