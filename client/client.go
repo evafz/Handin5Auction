@@ -15,15 +15,34 @@ type AuctionNode struct {
 	highestBidder string
 	bidders       map[string]int64
 	mu            sync.Mutex
+	result        string
 }
 
 type BidRequest struct {
 	bidderID string
-	amount int64
+	amount   int64
 }
 
+type bidResult int64
+
 type BidResponse struct {
-	bidResult enums
+	bidResult bidResult
+}
+
+const (
+	BidFail bidResult = iota
+	BidSuccess
+	BidException
+)
+
+type ResultRequest struct {
+	bidderID string
+}
+
+type ResultResponse struct {
+	outcome       Outcome
+	highestBid    int64
+	highestBidder string
 }
 
 func (n *AuctionNode) Bid(request *BidRequest) *BidResponse {
@@ -46,29 +65,28 @@ func (n *AuctionNode) Bid(request *BidRequest) *BidResponse {
 	return BidSuccess
 }
 
-func main(){
+func main() {
 	node := &AuctionNode{
-		id:	1,
-		bidders: make(map[string]int),
+		id:      1,
+		bidders: make(map[string]int64),
 	}
 
- //some bids:
-	bidRequest1 := &BidRequest{Amount: 50, BidderId: "Alex"}
-	bidRequest2 := &BidRequest{Amount: 55, BidderId: "Bjarne"}
-	bidRequest3 := &BidRequest{Amount: 150, BidderId: "ChristHimself"}
-	
-	response1 := node.Bid(&bidRequest1)
-	response2 := node.Bid(&bidRequest2)
-	response3 := node.Bid(&bidRequest3)
+	//some bids:
+	bidRequest1 := &BidRequest{amount: 50, bidderID: "Alex"}
+	bidRequest2 := &BidRequest{amount: 55, bidderID: "Bjarne"}
+	bidRequest3 := &BidRequest{amount: 150, bidderID: "ChristHimself"}
 
-	resultRequest := &ResultRequest{}
-	resultResponse := node.Result(resultRequest)
+	response1 := node.Bid(bidRequest1)
+	response2 := node.Bid(bidRequest2)
+	response3 := node.Bid(bidRequest3)
 
-	switch resultResponse.Outcome {
+	resultResponse := node.result
+
+	switch resultResponse.outcome {
 	case ResultResponse_AUCTION_NOT_OVER:
 		fmt.Println("Auction is still ongoing")
 	case ResultResponse_AUCTION_SUCCESS:
-		fmt.Printf("Auction won by %s with a bid of %d\n", resultResponse.HighestBidder, resultResponse.HighestBid)
+		fmt.Printf("Auction won by %s with a bid of %d\n", resultResponse.highestBidder, resultResponse.highestBid)
 	case ResultResponse_AUCTION_FAIL:
 		fmt.Println("Auction failed")
 	}
