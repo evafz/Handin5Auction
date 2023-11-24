@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 	"strconv"
 	"sync"
 
-	proto "Replication/protoFile"
+	proto "Handin5Auction/protoFile"
 
 	"google.golang.org/grpc"
 )
@@ -17,7 +18,7 @@ type Server struct {
 	name        string
 	port        int
 	lamport     int64
-	auctionNode AuctionNode
+	auctionNode client.AuctionNode
 	clientLock  sync.RWMutex
 }
 
@@ -41,6 +42,22 @@ func startServer(server *Server) {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
+}
+
+func (s *Server) Bid(ctx context.Context, request *proto.BidRequest) (*proto.BidResponse, error){
+	s.clientLock.Lock()
+	defer s.clientLock.Unlock()
+
+	//New BidRequest
+	bidRequest := &BidRequest{
+		bidderID: request.BidderId,
+		amount: request.Amount,
+		lamTime: s.auctionNode.lamTime,
+	}
+
+	response := s.auctionNode.Bid(bidRequest)
+
+	return &proto.BidResponse{Result: proto.BidResponse_BidResult(response.result)}, nil
 }
 
 func main() {

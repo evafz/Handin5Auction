@@ -1,4 +1,4 @@
-module Replication
+module Handin5Auction
 
 go 1.21.4
 
