@@ -90,3 +90,20 @@ func main() {
 	server := NewAuctionServer(100 * time.Second) // Set the auction duration (e.g., 100 seconds)
 	startServer(server)
 }
+
+func (s *AuctionServer) Join(ctx context.Context, req *pb.JoinRequest) (*pb.JoinResponse, error) {
+	message := "Participant " + req.BidderId + " joined Chitty-Chat"
+	log.Printf(message)
+
+	return &pb.JoinResponse{WelcomeMessage: message}, nil
+}
+
+func (s *AuctionServer) Leave(ctx context.Context, req *pb.LeaveRequest) (*pb.LeaveResponse, error) {
+	message := "Participant " + req.BidderId + " left Chitty-Chat"
+
+	s.mu.Lock()
+	delete(s.bidders, req.BidderId) // Remove client from active clients list
+	s.mu.Unlock()
+
+	return &pb.LeaveResponse{GoodbyeMessage: message}, nil
+}
