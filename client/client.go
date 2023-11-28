@@ -41,7 +41,7 @@ func main() {
 
 	// Start bidding process
 	for {
-		fmt.Print("Enter your bid amount (or type 'exit' to leave): ")
+		fmt.Print("Enter your bid amount or get the status by typing 'status' (or type 'exit' to leave): ")
 		amountStr, _ := scanner.ReadString('\n')
 		amountStr = strings.TrimSpace(amountStr)
 
@@ -49,6 +49,21 @@ func main() {
 			break
 		}
 
+		if amountStr == "status"{
+			resultResp, err := client.Result(context.Background(), &pb.ResultRequest{BidderId: bidderID})
+			if err != nil {
+				log.Fatalf("Error while getting status: %v", err)
+			}
+			switch resultResp.Outcome {
+			case pb.ResultResponse_AUCTION_NOT_OVER:
+				fmt.Printf("Auction is not over. Current highest bid: %d\n", resultResp.HighestBid)
+			case pb.ResultResponse_AUCTION_SUCCESS:
+				fmt.Printf("Auction result: Winning bid is %d\n", resultResp.HighestBid)
+			case pb.ResultResponse_AUCTION_FAIL:
+				fmt.Println("Auction failed.")
+			}
+
+		} else {
 		amount, err := strconv.Atoi(amountStr)
 		if err != nil {
 			log.Println("Invalid bid amount. Please enter a valid number.")
@@ -69,18 +84,6 @@ func main() {
 		case pb.BidResponse_BID_EXCEPTION:
 			fmt.Println("Exception occurred during bidding.")
 		}
-
-		// Query auction result
-		resultResp, err := client.Result(context.Background(), &pb.ResultRequest{BidderId: bidderID})
-		if err != nil {
-			log.Fatalf("Error while querying result: %v", err)
-		}
-
-		switch resultResp.Outcome {
-		case pb.ResultResponse_AUCTION_NOT_OVER:
-			fmt.Printf("Auction is not over. Current highest bid: %d\n", resultResp.HighestBid)
-		case pb.ResultResponse_AUCTION_SUCCESS:
-			fmt.Printf("Auction result: Winning bid is %d\n", resultResp.HighestBid)
 		}
 	}
 
