@@ -7,8 +7,8 @@ option go_package = "protoFile/proto";
 service Auction {
   rpc Bid(BidRequest) returns (BidResponse);
   rpc Result(ResultRequest) returns (ResultResponse);
-  rpc Leave(LeaveRequest) returns (LeaveResponse);
   rpc Join(JoinRequest) returns (JoinResponse);
+  rpc Leave(LeaveRequest) returns (LeaveResponse);
 }
 
 message LeaveRequest {
@@ -26,7 +26,6 @@ message JoinRequest {
 message JoinResponse {
   string welcome_message = 1;
 }
-
 
 message BidRequest {
   int64 amount = 1;
