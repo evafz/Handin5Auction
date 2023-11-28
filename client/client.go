@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 
@@ -24,10 +22,11 @@ func main() {
 
 	client := pb.NewAuctionClient(conn)
 
-	fmt.Print("Enter your bidder ID: ")
+	main.Join
+	/*fmt.Print("Enter your bidder ID: ")
 	scanner := bufio.NewReader(os.Stdin)
 	bidderID, _ := scanner.ReadString('\n')
-	bidderID = strings.TrimSpace(bidderID)
+	bidderID = strings.TrimSpace(bidderID) */
 
 	// Join the auction
 	joinResp, err := client.Join(context.Background(), &pb.JoinRequest{BidderId: bidderID})
@@ -53,7 +52,7 @@ func main() {
 		}
 
 		// Bid in the auction
-		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID,})
+		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID})
 		if err != nil {
 			log.Fatalf("Error while bidding: %v", err)
 		}

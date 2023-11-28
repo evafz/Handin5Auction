@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
+	"fmt"
 	"log"
 	"net"
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -69,6 +73,15 @@ func (s *AuctionServer) Result(ctx context.Context, req *pb.ResultRequest) (*pb.
 
 	// Auction is over, provide the result
 	return &pb.ResultResponse{Outcome: pb.ResultResponse_AUCTION_SUCCESS, HighestBid: s.highestBid, HighestBidder: s.winningBidder}, nil
+}
+
+func (s *AuctionServer) Join(ctx context.Context, req *pb.JoinRequest) (*pb.JoinResponse, error) {
+	fmt.Print("Enter your bidder ID: ")
+	scanner := bufio.NewReader(os.Stdin)
+	bidderID, _ := scanner.ReadString('\n')
+	bidderID = strings.TrimSpace(bidderID)
+
+	return &pb.JoinResponse{}, nil
 }
 
 func startServer(server *AuctionServer) {
