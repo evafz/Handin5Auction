@@ -78,7 +78,6 @@ func main() {
 				nodeID = 1
 			} else if (nodeID == null) {
 				nodeID = 1
-			}
 			} else {
 				nodeID = nodeID + 1
 			}
