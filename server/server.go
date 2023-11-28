@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"strconv"
 	"sync"
 	"time"
 
@@ -92,18 +93,21 @@ func main() {
 }
 
 func (s *AuctionServer) Join(ctx context.Context, req *pb.JoinRequest) (*pb.JoinResponse, error) {
-	message := "Participant " + req.BidderId + " joined Chitty-Chat"
-	log.Printf(message)
+	logMessage := "Bidder with id " + req.BidderId + " joined"
+	log.Printf(logMessage)
 
+	n := strconv.Itoa(int(req.NodeId))
+	message := "You joined node " + n + " and can now bid"
 	return &pb.JoinResponse{WelcomeMessage: message}, nil
 }
 
 func (s *AuctionServer) Leave(ctx context.Context, req *pb.LeaveRequest) (*pb.LeaveResponse, error) {
-	message := "Participant " + req.BidderId + " left Chitty-Chat"
+	message := "Bidder with id " + req.BidderId + " left"
+	log.Printf(message)
 
 	s.mu.Lock()
 	delete(s.bidders, req.BidderId) // Remove client from active clients list
 	s.mu.Unlock()
 
-	return &pb.LeaveResponse{GoodbyeMessage: message}, nil
+	return &pb.LeaveResponse{}, nil
 }

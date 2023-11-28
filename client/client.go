@@ -15,9 +15,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-
-
-
 func main() {
 	conn, err := grpc.Dial(":50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -32,8 +29,10 @@ func main() {
 	bidderID, _ := scanner.ReadString('\n')
 	bidderID = strings.TrimSpace(bidderID)
 
+	nodeID := 1
+
 	// Join the auction
-	joinResp, err := client.Join(context.Background(), &pb.JoinRequest{BidderId: bidderID})
+	joinResp, err := client.Join(context.Background(), &pb.JoinRequest{BidderId: bidderID, NodeId: int64(nodeID)})
 	if err != nil {
 		log.Fatalf("Error while joining the auction: %v", err)
 	}
@@ -71,9 +70,16 @@ func main() {
 		}
 
 		// Bid in the auction
-		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID,})
+		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID, NodeId: int64(nodeID)})
 		if err != nil {
 			log.Fatalf("Error while bidding: %v", err)
+
+			if (nodeID > 3) {
+				nodeID = 1
+			} else {
+				nodeID = nodeID + 1
+			}
+			fmt.Println("Your new node is " + string(nodeID))
 		}
 
 		switch bidResp.Result {

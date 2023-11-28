@@ -6,8 +6,11 @@ option go_package = "protoFile/proto";
 
 service Auction {
   rpc Bid(BidRequest) returns (BidResponse);
+
   rpc Result(ResultRequest) returns (ResultResponse);
+
   rpc Join(JoinRequest) returns (JoinResponse);
+  
   rpc Leave(LeaveRequest) returns (LeaveResponse);
 }
 
@@ -21,6 +24,7 @@ message LeaveResponse {
 
 message JoinRequest {
   string bidder_id = 1;
+  int64 node_id = 2;
 }
 
 message JoinResponse {
@@ -31,6 +35,8 @@ message BidRequest {
   int64 amount = 1;
   string bidder_id = 2;
   int64 lamTime = 3;
+  int64 node_id = 4;
+  int64 auction_id = 5;
 }
 
 message BidResponse {
