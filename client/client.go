@@ -93,10 +93,9 @@ func (n *AuctionNode) ResultMethod() Outcome {
 	case "AUCTION_SUCCESS":
 		fmt.Printf("Auction won by %s with a bid of %d\n", n.highestBidder, n.highestBid)
 		return AUCTION_SUCCESS
-	case "AUCTION_FAIL":
-		fmt.Println("Auction failed")
-		return AUCTION_FAIL
 	}
+	fmt.Println("Auction failed")
+	return AUCTION_FAIL
 }
 
 func main() {
