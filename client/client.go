@@ -8,8 +8,8 @@ import (
 )
 
 type AuctionNode struct {
-	id            int
-	highestBid    int
+	id            int64
+	highestBid    int64
 	highestBidder string
 	bidders       map[string]struct {
 		amount  int64

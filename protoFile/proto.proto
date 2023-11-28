@@ -11,8 +11,9 @@ service Auction {
 }
 
 message BidRequest {
-  int32 amount = 1;
+  int64 amount = 1;
   string bidder_id = 2;
+  int64 lamTime = 3;
 }
 
 message BidResponse {

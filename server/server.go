@@ -49,7 +49,7 @@ func (s *Server) Bid(ctx context.Context, request *proto.BidRequest) (*proto.Bid
 	defer s.clientLock.Unlock()
 
 	//New BidRequest
-	bidRequest := &BidRequest{
+	bidRequest := &proto.BidRequest{
 		bidderID: request.BidderId,
 		amount: request.Amount,
 		lamTime: s.auctionNode.lamTime,
