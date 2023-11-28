@@ -67,6 +67,8 @@ func main() {
 		if(amountStr == "failure"){
 			if (nodeID > 3) {
 				nodeID = 1
+			} else if (nodeID == 0) {
+				nodeID = 1
 			} else {
 				nodeID = nodeID + 1
 			}
@@ -82,6 +84,7 @@ func main() {
 		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID, NodeId: int64(nodeID)})
 		if err != nil {
 			log.Fatalf("Error while bidding: %v", err)
+
 		}
 		
 			switch bidResp.Result {
@@ -91,7 +94,8 @@ func main() {
 				fmt.Println("Bid failed. Try a higher amount.")
 			case pb.BidResponse_BID_EXCEPTION:
 				fmt.Println("Exception occurred during bidding.")
-			}
+
+			
 		}
 
 		
