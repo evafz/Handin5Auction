@@ -46,9 +46,7 @@ func main() {
 
 		if amountStr == "exit" {
 			break
-		}
-
-		if amountStr == "status"{
+		} else if amountStr == "status"{
 			resultResp, err := client.Result(context.Background(), &pb.ResultRequest{BidderId: bidderID})
 			if err != nil {
 				log.Fatalf("Error while getting status: %v", err)
@@ -62,9 +60,7 @@ func main() {
 				fmt.Println("Auction failed.")
 			}
 
-		} 
-		
-		if(amountStr == "failure"){
+		} else if(amountStr == "failure"){
 			if (nodeID > 3) {
 				nodeID = 1
 			} else if (nodeID == 0) {
@@ -72,7 +68,7 @@ func main() {
 			} else {
 				nodeID = nodeID + 1
 			}
-			fmt.Println("Your new node is " + string(nodeID))
+			fmt.Println("Your new node is " + string(rune(nodeID)))
 		} else {
 		amount, err := strconv.Atoi(amountStr)
 		if err != nil {
