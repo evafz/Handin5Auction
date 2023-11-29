@@ -60,7 +60,7 @@ func main() {
 				fmt.Println("Auction failed.")
 			}
 
-		} else if(amountStr == "failure"){
+		} else if (amountStr == "failure") {
 			if (nodeID > 3) {
 				nodeID = 1
 			} else if (nodeID == 0) {
@@ -70,18 +70,19 @@ func main() {
 			}
 			fmt.Println("Your new node is " + string(rune(nodeID)))
 		} else {
-		amount, err := strconv.Atoi(amountStr)
-		if err != nil {
-			log.Println("Invalid bid amount. Please enter a valid number.")
-			continue
-		}
+			amount, err := strconv.Atoi(amountStr)
 
-		// Bid in the auction
-		bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID, NodeId: int64(nodeID)})
-		if err != nil {
-			log.Fatalf("Error while bidding: %v", err)
+			if err != nil {
+				log.Println("Invalid bid amount. Please enter a valid number.")
+				continue
+			}
 
-		}
+			// Bid in the auction
+			bidResp, err := client.Bid(context.Background(), &pb.BidRequest{Amount: int64(amount), BidderId: bidderID, NodeId: int64(nodeID)})
+			
+			if err != nil {
+				log.Fatalf("Error while bidding: %v", err)
+			}
 		
 			switch bidResp.Result {
 			case pb.BidResponse_BID_SUCCESS:
@@ -90,13 +91,8 @@ func main() {
 				fmt.Println("Bid failed. Try a higher amount.")
 			case pb.BidResponse_BID_EXCEPTION:
 				fmt.Println("Exception occurred during bidding.")
-
-			
+			}
 		}
-
-		
-		}
-	
 
 	// Leave the auction
 	leaveResp, err := client.Leave(context.Background(), &pb.LeaveRequest{BidderId: bidderID})
@@ -104,5 +100,5 @@ func main() {
 		log.Fatalf("Error while leaving the auction: %v", err)
 	}
 	fmt.Println(leaveResp.GoodbyeMessage)
-}
+	}
 }
